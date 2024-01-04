@@ -50,9 +50,13 @@ class BrandModel {
       // -- Map Json Record to the model
       return BrandModel(
         id: document.id, 
-        name: name, 
-        image: image
+        name: data['Name'] ?? '', 
+        image: data['Image'] ?? '',
+        productsCount: data['ProductCount'] ?? '',
+        isFeatured: data['IsFeatured'] ?? false,
         );
+    }else{
+      return BrandModel.empty();
     }
   }
 }

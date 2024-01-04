@@ -1,11 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saraswati_application_project/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:saraswati_application_project/common/widgets/custom_shapes/containers/search_container.dart';
 import 'package:saraswati_application_project/common/widgets/layouts/grid_layout.dart';
 import 'package:saraswati_application_project/common/widgets/products/product_cards/product_card_vertical.dart';
+import 'package:saraswati_application_project/common/widgets/shimmer/vertical_product_shimmer.dart';
 import 'package:saraswati_application_project/common/widgets/texts/section_heading.dart';
-import 'package:saraswati_application_project/features/shop/controllers/product_controller.dart';
+import 'package:saraswati_application_project/features/shop/controllers/product/product_controller.dart';
 import 'package:saraswati_application_project/features/shop/screens/all_products/all_products.dart';
 import 'package:saraswati_application_project/features/shop/screens/home/widgets/home_appbar.dart';
 import 'package:saraswati_application_project/features/shop/screens/home/widgets/home_categories.dart';
@@ -23,6 +25,8 @@ class HomeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+
+            /// -- Header
             const TPrimaryHeaderContainer(
               child: Column(
                 children: [
@@ -63,13 +67,26 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: TSizes.spaceBtwSections,),
 
                   /// -- Heading
-                  TSectionHeading(title: 'Popular Products', onPressed: () => Get.to(() => const AllProducts()),),
+                  TSectionHeading(title: 'Popular Products', 
+                  onPressed: () => Get.to(() => AllProducts(
+                    title: 'Popular Products', 
+                    futureMethod: controller.fetchAllFeaturedProducts(),
+                    ),),
+                    ),
                   const SizedBox(height: TSizes.spaceBtwItems,),
 
                   /// Popular Product
-                  Obx((){
-                    TGridLayout(itemCount: 4, itemBuilder: (_, index) => const TProductCardVertical(),);
-                  } ),
+                  Obx(() {
+                    if (controller.isLoading.value) return const TVerticalProductShimmer();
+
+                    if (controller.featuredProducts.isEmpty){
+                      return Center(child: Text('No Data Found!', style: Theme.of(context).textTheme.bodyMedium,),);
+                    }
+                    return TGridLayout(
+                      itemCount: controller.featuredProducts.length, 
+                      itemBuilder: (_, index) => TProductCardVertical(product: controller.featuredProducts[index]),
+                    );
+                  })
                 ],
               )),
           ],

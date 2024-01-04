@@ -16,7 +16,7 @@ class TFirebaseStorageService extends GetxController{
   Future<Uint8List> getImageDataFromAssets(String path) async {
     try{
       final byteData = await rootBundle.load(path);
-      final imageData = byteData.buffer.asUint8List(byteData, offsetInBytes, byteData.lengthInBytes);
+      final imageData = byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
       return imageData;
     }catch (e) {
       // -- Handle exceptions gracefully

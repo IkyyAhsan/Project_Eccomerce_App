@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:saraswati_application_project/common/widgets/shimmer/shimmer.dart';
 import 'package:saraswati_application_project/utils/constants/colors.dart';
 import 'package:saraswati_application_project/utils/constants/sizes.dart';
 
@@ -41,8 +43,19 @@ class TRoundedImage extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: applyImageRadius ? BorderRadius.circular(borderRadius) : BorderRadius.zero, 
-          child: Image(fit: fit, image: isNetworkImage ? NetworkImage(imageUrl) : AssetImage(imageUrl) as ImageProvider,),),
-        
+          child: isNetworkImage
+              ? CachedNetworkImage(
+                fit: fit,
+                imageUrl: imageUrl,
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    TShimmerEffect(width: width ?? double.infinity, height: height ?? 158),
+                errorWidget: (context, url, error) => const Icon(Icons.error)
+              )
+              : Image(
+                fit: fit,
+                image: AssetImage(imageUrl),
+              ) 
+        )
       ),
     );
   }

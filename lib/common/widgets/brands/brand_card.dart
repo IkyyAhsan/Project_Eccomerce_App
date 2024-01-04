@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:saraswati_application_project/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:saraswati_application_project/common/widgets/images/t_circular_image.dart';
 import 'package:saraswati_application_project/common/widgets/texts/t_brand_title_text_with_verified_icon.dart';
+import 'package:saraswati_application_project/features/shop/models/brand_model.dart';
 import 'package:saraswati_application_project/utils/constants/colors.dart';
 import 'package:saraswati_application_project/utils/constants/enums.dart';
-import 'package:saraswati_application_project/utils/constants/image_strings.dart';
 import 'package:saraswati_application_project/utils/constants/sizes.dart';
 import 'package:saraswati_application_project/utils/helpers/helper_functions.dart';
 
@@ -12,9 +12,10 @@ class TBrandCard extends StatelessWidget {
   const TBrandCard({
     super.key,
     this.onTap, 
-    required this.showBorder
+    required this.showBorder, required this.brand
   });
 
+  final BrandModel brand;
   final bool showBorder;
   final void Function()? onTap;
 
@@ -34,8 +35,8 @@ class TBrandCard extends StatelessWidget {
             /// -- Icon
             Flexible(
               child: TCircularImage(
-                isNetworkImage: false,
-                image: TImages.wardahLogo,
+                isNetworkImage: true,
+                image: brand.image,
                 backgroundColor: Colors.transparent,
                 overlayColor: isDark ? TColors.white : TColors.black,
               ),
@@ -48,9 +49,9 @@ class TBrandCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const TBrandTitleTextWithVerifiedIcon(title: 'Wardah', brandTextSize: TextSizes.large,),
+                  TBrandTitleTextWithVerifiedIcon(title: brand.name, brandTextSize: TextSizes.large,),
                   Text(
-                    '25 Products',
+                    '${brand.productsCount ?? 0} products',
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.labelMedium,
                   )
